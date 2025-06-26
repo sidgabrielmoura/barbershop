@@ -56,8 +56,6 @@ export default async function Home() {
         <Populars barbershop={barbershop} />
 
       </section>
-
-      <Footer/>
     </main>
   )
 }

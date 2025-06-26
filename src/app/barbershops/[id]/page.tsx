@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/prisma";
-import { ChevronLeft, Menu, Smartphone, Star } from "lucide-react";
+import { Check, ChevronLeft, Menu, Smartphone, Star } from "lucide-react";
 import { IoLocationSharp } from "react-icons/io5";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
 import ServiceItem from "@/components/serviceItem";
 import Footer from "@/components/footer";
 import SheetTriggerComponent from "@/components/sheetTrigger";
+import PhoneComponent from "@/components/phoneItem";
 
 export default async function BarbershopPage({ params }: any){
     const barbershop = await db.barbershop.findUnique({
@@ -76,23 +76,11 @@ export default async function BarbershopPage({ params }: any){
 
                 <div className="w-full h-[0.08px] bg-zinc-600/40 mt-6"/>
 
-                <section className="px-6 mt-6 space-y-5 flex flex-col">
-                    <h2 className="text-md text-muted-foreground uppercase">Contato</h2>
-
-                    <div className="flex flex-col gap-2">
-                        {barbershop?.phones.map((contact, index) => (
-                            <div className="flex justify-between items-center">
-                                <div className="flex gap-2">
-                                    <Smartphone/>
-                                    {contact}
-                                </div>
-                                <Button variant={'outline'}>Copiar</Button>
-                            </div>
-                        ))}
-                    </div>
+                <section className="px-5 py-4 space-y-3">
+                    {barbershop?.phones.map((phone, index) => (
+                        <PhoneComponent phone={phone} key={index}/>
+                    ))}
                 </section>
-
-                <Footer/>
             </main>
         </>
     )
