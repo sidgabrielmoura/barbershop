@@ -9,7 +9,7 @@ import Footer from "@/components/footer";
 import SheetTriggerComponent from "@/components/sheetTrigger";
 import PhoneComponent from "@/components/phoneItem";
 
-export default async function BarbershopPage({ params }: any){
+export default async function BarbershopPage({ params }: any) {
     const barbershop = await db.barbershop.findUnique({
         where: {
             id: params.id,
@@ -23,19 +23,20 @@ export default async function BarbershopPage({ params }: any){
         <>
             <main>
                 <section>
-                    <Image 
-                        src={barbershop?.imageUrl || ''} 
-                        alt={barbershop?.name || ''} 
-                        width={100} 
-                        height={100}
-                        className="w-full h-auto object-contain"
+                    <div
+                        className="w-full h-[250px] bg-contain bg-fixed bg-no-repeat"
+                        style={{
+                            backgroundImage: `url(${barbershop?.imageUrl || ''})`,
+                        }}
                     />
 
                     <div className="w-full flex items-center justify-between px-3 absolute top-5">
-                        <Button size={'icon'} variant={'secondary'} className="size-10">
-                            <Link href={'/'}><ChevronLeft/></Link>
-                        </Button>
-                        <SheetTriggerComponent/>
+                        <Link href={'/'}>
+                            <Button size={'icon'} variant={'outline'} className="size-10">
+                                <ChevronLeft />
+                            </Button>
+                        </Link>
+                        <SheetTriggerComponent />
                     </div>
                 </section>
 
@@ -43,18 +44,18 @@ export default async function BarbershopPage({ params }: any){
                     <h1 className="text-2xl font-medium">{barbershop?.name}</h1>
                     <div>
                         <div className="flex items-center gap-2 mt-2">
-                            <IoLocationSharp className="size-5 text-violet-500"/>
+                            <IoLocationSharp className="size-5 text-violet-500" />
                             <span className="text-md text-zinc-300">{barbershop?.address}</span>
                         </div>
-                        
+
                         <div className="flex items-center gap-2 mt-2">
-                            <Star className="size-5 text-violet-500 fill-violet-500"/>
+                            <Star className="size-5 text-violet-500 fill-violet-500" />
                             <span className="text-md text-zinc-300">5,0 (459 avaliações)</span>
                         </div>
                     </div>
                 </section>
 
-                <div className="w-full h-[0.08px] bg-zinc-600/40 mt-6"/>
+                <div className="w-full h-[0.08px] bg-zinc-600/40 mt-6" />
 
                 <section className="px-6 mt-6">
                     <h2 className="text-md text-muted-foreground uppercase">Sobre nós</h2>
@@ -64,21 +65,21 @@ export default async function BarbershopPage({ params }: any){
                     </p>
                 </section>
 
-                <div className="w-full h-[0.08px] bg-zinc-600/40 mt-6"/>
+                <div className="w-full h-[0.08px] bg-zinc-600/40 mt-6" />
 
                 <section className="px-6 mt-6 space-y-5">
                     <h2 className="text-md text-muted-foreground uppercase">Serviços</h2>
 
                     {barbershop?.services.map((service: any) => (
-                        <ServiceItem key={service.id} service={service} />
+                        <ServiceItem key={service.id} service={service} barbershopName={barbershop.name} />
                     ))}
                 </section>
 
-                <div className="w-full h-[0.08px] bg-zinc-600/40 mt-6"/>
+                <div className="w-full h-[0.08px] bg-zinc-600/40 mt-6" />
 
-                <section className="px-5 py-4 space-y-3">
+                <section className="px-6 py-4 space-y-3">
                     {barbershop?.phones.map((phone, index) => (
-                        <PhoneComponent phone={phone} key={index}/>
+                        <PhoneComponent phone={phone} key={index} />
                     ))}
                 </section>
             </main>

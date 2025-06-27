@@ -30,9 +30,11 @@ export default function Recommended({ barbershop }: RecommendedProps) {
                                 <h1 className="font-bold text-lg text-nowrap truncate">{barber.name}</h1>
                                 <span className="text-xs text-zinc-500 truncate text-nowrap">{barber.address}</span>
                             </div>
-                            <Button variant={'secondary'} size={'sm'} className="rounded-xl">
-                                <Link href={`/barbershops/${barber.id}`}>Reservar</Link>
-                            </Button>
+                            <Link href={`/barbershops/${barber.id}`} className="w-full">
+                                <Button variant={'secondary'} size={'sm'} className="rounded-xl w-full">
+                                    Reservar
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 ))}
