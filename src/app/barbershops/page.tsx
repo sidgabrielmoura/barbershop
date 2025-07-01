@@ -17,10 +17,20 @@ interface BarbershopSearchProps {
 export default async function BarbershopPage({ searchParams }: BarbershopSearchProps) {
     const barbershop = await db.barbershop.findMany({
         where: {
-            name: {
-                contains: searchParams.search,
-                mode: "insensitive"
-            }
+            OR: [
+                {name: {
+                        contains: searchParams.search,
+                        mode: "insensitive"
+                }},
+                {services: {
+                    some: {
+                        name: {
+                            contains: searchParams.search,
+                            mode: "insensitive"
+                        }
+                    }
+                }}
+            ]
         }
     })
 
@@ -30,7 +40,7 @@ export default async function BarbershopPage({ searchParams }: BarbershopSearchP
                 <Navbar />
 
                 <section className="px-3 space-y-3">
-                    <SearchComponent/>
+                    <SearchComponent />
 
                     <h1 className="text-muted-foreground pl-1 uppercase">resultados para "{searchParams.search}"</h1>
 

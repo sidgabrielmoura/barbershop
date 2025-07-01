@@ -8,8 +8,13 @@ import { QuickSearchServices } from "@/constants";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { FaGoogle } from "react-icons/fa6";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function SheetTriggerComponent() {
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+    const search = searchParams.get("search")
 
     const { data } = useSession()
 
@@ -78,24 +83,39 @@ export default function SheetTriggerComponent() {
                     <div className="h-[0.1px] w-full bg-zinc-700" />
 
                     <div>
-                        <Button variant={"ghost"} className="w-full justify-start">
-                            <Home className="text-xl size-10" />
-                            <h1>Inicio</h1>
-                        </Button>
-                        <Button variant={"ghost"} className="w-full justify-start">
-                            <CalendarDays className="text-xl size-10" />
-                            <h1>Agendamentos</h1>
-                        </Button>
+                        <Link href={'/'}>
+                            <Button variant={pathname === '/' ? "default" : "ghost"} className="w-full justify-start">
+                                <Home className="text-xl size-10" />
+                                <h1>Inicio</h1>
+                            </Button>
+                        </Link>
+                        <Link href={'/'}>
+                            <Button variant={"ghost"} className="w-full justify-start">
+                                <CalendarDays className="text-xl size-10" />
+                                <h1>Agendamentos</h1>
+                            </Button>
+                        </Link>
                     </div>
 
                     <div className="h-[0.1px] w-full bg-zinc-700" />
 
                     <div className="flex flex-col gap-2">
                         {QuickSearchServices.map((service, index) => (
-                            <Button key={index} variant={"ghost"} className="w-full justify-start">
-                                <service.icon className="text-xl size-10" />
-                                {service.name}
-                            </Button>
+                            <Link href={`barbershops?search=${service.name}`}>
+                                <Button
+                                    key={index}
+                                    variant={
+                                        pathname.startsWith('/barbershops') && 
+                                        search === service.name.toLowerCase()
+                                        ? "default"
+                                        : "ghost"
+                                    }
+                                    className="w-full justify-start"
+                                >
+                                    <service.icon className="text-xl size-10" />
+                                    {service.name}
+                                </Button>
+                            </Link>
                         ))}
                     </div>
 
