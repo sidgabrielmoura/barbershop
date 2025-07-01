@@ -1,15 +1,29 @@
+'use client'
 import { Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { QuickSearchServices } from "@/constants";
 import { Card, CardContent } from "./ui/card";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SearchComponent() {
+    const router = useRouter()
+    const [searchValue, setSearchValue] = useState('')
+
+    const handleSearch = () => {
+        if(searchValue.length > 2)
+        router.push(`/barbershops?search=${searchValue}`)
+    }
+
     return (
         <div className="flex-col flex items-center justify-between w-full gap-1 mt-6">
             <div className="flex items-center gap-1 w-full">
-                <Input type="search" placeholder="Faça sua busca..." className="outline-none flex-1 text-sm" />
-                <Button size={'icon'} variant={'default'}>
+                <div className="w-full relative inset-0">
+                    <Input onChange={(e) => setSearchValue(e.target.value)} type="text" placeholder="Faça sua busca..." className="outline-none flex-1 text-sm h-12" />
+                    <span className={`absolute right-3 top-4 text-muted-foreground text-xs ${searchValue.length <= 2 && 'text-red-500/80'}`}>{searchValue.length}</span>
+                </div>
+                <Button onClick={handleSearch} size={'icon'} variant={'default'} className="size-12">
                     <Search />
                 </Button>
             </div>

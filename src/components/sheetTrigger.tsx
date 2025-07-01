@@ -1,3 +1,4 @@
+'use client'
 import { CalendarDays, Database, Home, LogIn, LogOut, Menu, X } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
@@ -6,8 +7,20 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTrigger } from "./ui
 import { QuickSearchServices } from "@/constants";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { FaGoogle } from "react-icons/fa6";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function SheetTriggerComponent() {
+
+    const { data } = useSession()
+
+    const handleGoogleLogin = async () => {
+        await signIn("google")
+    }
+
+    const handleSignOut = async () => {
+        await signOut()
+    }
+
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -18,7 +31,7 @@ export default function SheetTriggerComponent() {
             <SheetContent>
                 <SheetHeader>
                     <div className="flex items-center justify-between w-full">
-                        <h1 className="font-bold">Olá, Faça seu login!</h1>
+                        <h1 className="font-bold">{data?.user ? 'Menu' : 'Olá, Faça seu login!'}</h1>
                         <SheetClose asChild>
                             <Button size={"icon"} variant={"outline"} className="p-2">
                                 <X className="cursor-pointer" />
@@ -28,35 +41,39 @@ export default function SheetTriggerComponent() {
                 </SheetHeader>
 
                 <section className="mt-10 flex flex-col gap-7">
-                    {/* <div className="flex gap-4 items-center">
-                        <Image src={'/avatar.png'} alt="avatar" width={20} height={20} className="size-14 rounded-full border-2 border-violet-500" />
-                        <div className="-space-y-1">
-                            <h1 className="text-lg font-bold">Pedro Alves</h1>
-                            <p className="text-sm text-zinc-300">pedroalves53@gmail.com</p>
+                    {data?.user && (
+                        <div className="flex gap-4 items-center">
+                            <Image src={data.user.image || '/avatar.png'} alt="avatar" width={20} height={20} className="size-14 rounded-full border-2 border-violet-500" />
+                            <div className="-space-y-1">
+                                <h1 className="text-lg font-bold">{data.user.name}</h1>
+                                <p className="text-sm text-zinc-300">{data.user.email}</p>
+                            </div>
                         </div>
-                    </div> */}
+                    )}
 
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button variant={"default"} className="w-full justify-center">
-                                <LogIn className="text-xl size-10" />
-                                <h1>Entrar</h1>
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="px-7">
-                            <section className="flex flex-col items-center justify-between gap-7">
-                                <div className="flex flex-col items-center justify-center">
-                                    <h1 className="text-xl font-medium">Faça login na plataforma</h1>
-                                    <p className="text-muted-foreground text-md opacity-90 font-light">Conecte-se usando sua conta do Google</p>
-                                </div>
-
-                                <Button variant={"outline"} className="w-full justify-center">
-                                    <FaGoogle className="text-xl size-10" />
-                                    <h1>Google</h1>
+                    {!data?.user && (
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant={"default"} className="w-full justify-center">
+                                    <LogIn className="text-xl size-10" />
+                                    <h1>Entrar</h1>
                                 </Button>
-                            </section>
-                        </DialogContent>
-                    </Dialog>
+                            </DialogTrigger>
+                            <DialogContent className="px-7">
+                                <section className="flex flex-col items-center justify-between gap-7">
+                                    <div className="flex flex-col items-center justify-center">
+                                        <h1 className="text-xl font-medium">Faça login na plataforma</h1>
+                                        <p className="text-muted-foreground text-md opacity-90 font-light">Conecte-se usando sua conta do Google</p>
+                                    </div>
+
+                                    <Button variant={"outline"} className="w-full justify-center" onClick={handleGoogleLogin}>
+                                        <FaGoogle className="text-xl size-10" />
+                                        <h1>Google</h1>
+                                    </Button>
+                                </section>
+                            </DialogContent>
+                        </Dialog>
+                    )}
 
                     <div className="h-[0.1px] w-full bg-zinc-700" />
 
@@ -82,12 +99,16 @@ export default function SheetTriggerComponent() {
                         ))}
                     </div>
 
-                    {/* <div className="h-[0.1px] w-full bg-zinc-700" />
+                    {data?.user && (
+                        <>
+                            <div className="h-[0.1px] w-full bg-zinc-700" />
 
-                    <Button variant={"ghost"} className="w-full justify-start px-5 text-red-400/80">
-                        <LogOut className="text-xl size-10" />
-                        <h1>Sair da conta</h1>
-                    </Button> */}
+                            <Button onClick={handleSignOut} variant={"ghost"} className="w-full justify-start px-5 text-red-400/80">
+                                <LogOut className="text-xl size-10" />
+                                <h1>Sair da conta</h1>
+                            </Button>
+                        </>
+                    )}
                 </section>
             </SheetContent>
         </Sheet>
