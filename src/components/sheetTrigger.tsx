@@ -11,16 +11,16 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { useState } from "react";
+import GoogleDialog from "./GoogleDialog";
+
 export default function SheetTriggerComponent() {
+    const [openDialog, setOpenDialog] = useState(false)
     const pathname = usePathname()
     const searchParams = useSearchParams()
     const search = searchParams.get("search")
 
     const { data } = useSession()
-
-    const handleGoogleLogin = async () => {
-        await signIn("google")
-    }
 
     const handleSignOut = async () => {
         await signOut()
@@ -57,27 +57,13 @@ export default function SheetTriggerComponent() {
                     )}
 
                     {!data?.user && (
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button variant={"default"} className="w-full justify-center">
-                                    <LogIn className="text-xl size-10" />
-                                    <h1>Entrar</h1>
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="px-7">
-                                <section className="flex flex-col items-center justify-between gap-7">
-                                    <div className="flex flex-col items-center justify-center">
-                                        <h1 className="text-xl font-medium">Faça login na plataforma</h1>
-                                        <p className="text-muted-foreground text-md opacity-90 font-light">Conecte-se usando sua conta do Google</p>
-                                    </div>
-
-                                    <Button variant={"outline"} className="w-full justify-center" onClick={handleGoogleLogin}>
-                                        <FaGoogle className="text-xl size-10" />
-                                        <h1>Google</h1>
-                                    </Button>
-                                </section>
-                            </DialogContent>
-                        </Dialog>
+                        <>
+                            <Button variant={"default"} onClick={() => setOpenDialog(true)} className="w-full justify-center">
+                                <LogIn className="text-xl size-10" />
+                                <h1>Entrar</h1>
+                            </Button>
+                            <GoogleDialog open={openDialog} onOpenChange={setOpenDialog}/>
+                        </>
                     )}
 
                     <div className="h-[0.1px] w-full bg-zinc-700" />
@@ -105,10 +91,10 @@ export default function SheetTriggerComponent() {
                                 <Button
                                     key={index}
                                     variant={
-                                        pathname.startsWith('/barbershops') && 
-                                        search === service.name.toLowerCase()
-                                        ? "default"
-                                        : "ghost"
+                                        pathname.startsWith('/barbershops') &&
+                                            search === service.name.toLowerCase()
+                                            ? "default"
+                                            : "ghost"
                                     }
                                     className="w-full justify-start"
                                 >

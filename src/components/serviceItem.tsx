@@ -1,5 +1,5 @@
-
-import { BarbershopService } from "@/generated/prisma";
+'use client'
+import { Barbershop, BarbershopService } from "@/generated/prisma";
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
 import { Button } from "./ui/button";
@@ -7,13 +7,17 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTrigger } from "./ui
 import { X } from "lucide-react";
 import BookingSectionClient from "./BookingSectionClient";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
+import GoogleDialog from "./GoogleDialog";
 
 interface ServiceItemProps {
     service: BarbershopService;
-    barbershopName: string
+    barbershop: Barbershop
 }
 
-export default function ServiceItem({ service, barbershopName }: ServiceItemProps) {
+export default function ServiceItem({ service, barbershop }: ServiceItemProps) {
+    const [openDialog, setOpenDialog] = useState(false)
+    const {data} = useSession()
 
     return (
         <Card>
@@ -26,11 +30,18 @@ export default function ServiceItem({ service, barbershopName }: ServiceItemProp
                     </div>
 
                     <div className="flex items-end justify-between">
-                        <span className="text-lg font-bold text-violet-500/90">R$ {service.price.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-violet-500/90">R$ {Number(service.price).toFixed(2)}</span>
                         <Sheet >
-                            <SheetTrigger asChild>
-                                <Button variant={'secondary'}>Reservar</Button>
-                            </SheetTrigger>
+                            {data?.user ? (
+                                <SheetTrigger asChild>
+                                    <Button variant={'secondary'}>Reservar</Button>
+                                </SheetTrigger>
+                            ): (
+                                <>
+                                    <Button variant={'secondary'} onClick={() => setOpenDialog(true)}>Reservar</Button>
+                                    <GoogleDialog open={openDialog} onOpenChange={setOpenDialog}/>
+                                </>
+                            )}
                             <SheetContent className="px-0 flex flex-col justify-between overflow-y-auto">
                                 <SheetHeader className="px-6">
                                     <div className="flex items-center justify-between w-full">
@@ -45,7 +56,7 @@ export default function ServiceItem({ service, barbershopName }: ServiceItemProp
 
                                 <div className="h-[0.1px] w-full bg-zinc-700/50" />
 
-                                <BookingSectionClient service={service} barbershopName={barbershopName}/>
+                                <BookingSectionClient service={service} barbershop={barbershop}/>
                             </SheetContent>
                         </Sheet>
                     </div>

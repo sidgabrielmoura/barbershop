@@ -13,15 +13,22 @@ import { SheetClose } from "./ui/sheet"
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog"
 import { Loader } from "lucide-react"
 import { useSession } from "next-auth/react"
+import { BookingsGetter } from "@/app/actions/getBookings"
+import { Barbershop, Booking } from "@/generated/prisma"
 
-export default function BookingSectionClient({ service, barbershopName, user }: any) {
+interface BookingClientInterface{
+  service: any,
+  barbershop: Barbershop
+}
+export default function BookingSectionClient({ service, barbershop }: BookingClientInterface) {
   const [selectedDate, setSelectedDate] = useState<string>("")
   const [dateISO, setDateISO] = useState<string>("")
   const [selectedHour, setSelectedHour] = useState<string>("")
   const [openDialog, setOpenDialog] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [dayBookings, setDayBookings] = useState<Booking[]>([])
 
-  const {data} = useSession()
+  const { data } = useSession()
 
   const handleCreateBooking = async () => {
     try {
@@ -54,16 +61,64 @@ export default function BookingSectionClient({ service, barbershopName, user }: 
     }
   }
 
+  const getTimeList = (bookings: Booking[]) => {
+    const timelist = hours.map((h) => {
+      const [hourStr, minuteStr] = h.hour.split(':');
+      const hourNum = Number(hourStr);
+      const minuteNum = Number(minuteStr);
+
+      const isBooked = bookings.some(
+        (booking) =>
+          booking.date.getHours() === hourNum &&
+          booking.date.getMinutes() === minuteNum
+      );
+
+      return {
+        ...h,
+        disponible: !isBooked,
+      };
+    });
+
+    return timelist;
+  };
+
+  const defaultHours = [
+    { hour: '08:00', disponible: true },
+    { hour: '09:00', disponible: true },
+    { hour: '10:00', disponible: true },
+    { hour: '11:00', disponible: true },
+    { hour: '12:00', disponible: false },
+    { hour: '13:30', disponible: true },
+    { hour: '14:00', disponible: true },
+    { hour: '15:00', disponible: true },
+    { hour: '16:00', disponible: true },
+    { hour: '17:00', disponible: true },
+  ];
+
+  const [hours, setHours] = useState(defaultHours)
+
+  useEffect(() => {
+    if (!selectedDate) return
+
+    const fetch = async () => {
+      const bookings = await BookingsGetter({ date: new Date(dateISO), barbershopId: barbershop.id })
+      setDayBookings(bookings)
+    }
+
+    fetch()
+
+  }, [selectedDate])
+
   return (
     <>
       <CalendarServiceComponent onDateSelect={setSelectedDate} dateISO={setDateISO} />
       <div className="h-[0.1px] w-full bg-zinc-700/50" />
-      <BookingHoursComponent onHourSelect={setSelectedHour} />
+      <BookingHoursComponent onHourSelect={setSelectedHour} disponibleHours={getTimeList(dayBookings)} />
       <div className="h-[0.1px] w-full bg-zinc-700/50" />
       <BookingCard
         service={service?.name}
         price={`R$ ${Number(service?.price ?? 0).toFixed(2)}`}
-        barbershop={barbershopName}
+        barbershop={barbershop.name}
         hour={selectedHour}
         dayMonth={selectedDate}
       />
@@ -75,7 +130,7 @@ export default function BookingSectionClient({ service, barbershopName, user }: 
           variant={'default'}
           className="w-full"
         >
-          {loading && <Loader className="animate-spin size-5"/>}
+          {loading && <Loader className="animate-spin size-5" />}
           Confirmar
         </Button>
       </div>

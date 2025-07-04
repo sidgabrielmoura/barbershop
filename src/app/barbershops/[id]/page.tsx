@@ -71,7 +71,7 @@ export default async function BarbershopPage({ params }: any) {
                     <h2 className="text-md text-muted-foreground uppercase">Serviços</h2>
 
                     {barbershop?.services.map((service: any) => (
-                        <ServiceItem key={service.id} service={service} barbershopName={barbershop.name} />
+                        <ServiceItem key={service.id} service={service} barbershop={barbershop} />
                     ))}
                 </section>
 
