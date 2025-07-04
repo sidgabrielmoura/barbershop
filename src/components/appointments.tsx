@@ -1,6 +1,26 @@
+'use client'
 import { Card, CardContent } from "./ui/card";
+import { useSession } from "next-auth/react";
+import getAppointments from "@/app/actions/getAppointments";
+import { useEffect } from "react";
+
+import { useState } from "react";
 
 export default function Appointments() {
+    const { data } = useSession();
+    const [userAppointments, setUserAppointments] = useState<any[]>([]);
+
+    useEffect(() => {
+        const load = async () => {
+            if (data?.user) {
+                const res = await getAppointments((data.user as any).id);
+                setUserAppointments(res);
+            }
+        };
+
+        load();
+    }, [data?.user])
+
     return (
         <div className="w-full flex flex-col justify-between mt-4 gap-5">
             <h1 className="uppercase text-sm font-bold text-zinc-500">Agendamentos</h1>

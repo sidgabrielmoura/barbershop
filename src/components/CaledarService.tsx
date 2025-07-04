@@ -4,9 +4,10 @@ import { Calendar } from "./ui/calendar";
 
 interface Props {
     onDateSelect: (date: string) => void
+    dateISO: (date: string) => void
 }
 
-export default function CalendarServiceComponent({ onDateSelect }: Props) {
+export default function CalendarServiceComponent({ onDateSelect, dateISO }: Props) {
     const [date, setDate] = useState<Date | undefined>(new Date())
 
     useEffect(() => {
@@ -16,6 +17,7 @@ export default function CalendarServiceComponent({ onDateSelect }: Props) {
                 month: "long"
             })
             onDateSelect(formatted)
+            dateISO(date.toString())
         }
     }, [date])
 

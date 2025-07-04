@@ -6,11 +6,13 @@ import { Button } from "./ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTrigger } from "./ui/sheet";
 import { X } from "lucide-react";
 import BookingSectionClient from "./BookingSectionClient";
+import { useSession } from "next-auth/react";
 
 interface ServiceItemProps {
     service: BarbershopService;
     barbershopName: string
 }
+
 export default function ServiceItem({ service, barbershopName }: ServiceItemProps) {
 
     return (
@@ -25,7 +27,7 @@ export default function ServiceItem({ service, barbershopName }: ServiceItemProp
 
                     <div className="flex items-end justify-between">
                         <span className="text-lg font-bold text-violet-500/90">R$ {service.price.toFixed(2)}</span>
-                        <Sheet>
+                        <Sheet >
                             <SheetTrigger asChild>
                                 <Button variant={'secondary'}>Reservar</Button>
                             </SheetTrigger>
@@ -43,11 +45,7 @@ export default function ServiceItem({ service, barbershopName }: ServiceItemProp
 
                                 <div className="h-[0.1px] w-full bg-zinc-700/50" />
 
-                                <BookingSectionClient service={service} barbershopName={barbershopName} />
-
-                                <div className="px-3 pb-3 w-full">
-                                    <Button variant={'default'} className="w-full">Confirmar</Button>
-                                </div>
+                                <BookingSectionClient service={service} barbershopName={barbershopName}/>
                             </SheetContent>
                         </Sheet>
                     </div>
