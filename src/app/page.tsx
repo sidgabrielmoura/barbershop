@@ -2,10 +2,10 @@ import Navbar from "@/components/navbar";
 import { db } from "@/lib/prisma";
 import Image from "next/image";
 import SearchComponent from "@/components/search";
-import Appointments from "@/components/appointments";
 import Recommended from "@/components/recommended";
 import Populars from "@/components/populars";
 import WellcomeComponent from "@/components/wellcome";
+import AppointmentsClient from "@/components/appointments-client";
 
 export default async function Home() {
 
@@ -15,7 +15,7 @@ export default async function Home() {
     <main className="p-1 flex flex-col gap-2">
       <Navbar />
       <section className="px-4">
-        <WellcomeComponent/>
+        <WellcomeComponent />
 
         {/* Barra de pesquisa e Pesquisa rápida */}
         <SearchComponent />
@@ -25,10 +25,11 @@ export default async function Home() {
         </div>
 
         {/* Agendamentos */}
-        <Appointments/>
+        <AppointmentsClient barbershop={barbershop}/>
 
         {/* Recomendados */}
-        <Recommended barbershop={barbershop} />
+        <h1 className="uppercase text-sm font-bold text-zinc-500 mt-4">Recomendados</h1>
+        <Recommended barbershop={barbershop} grid={false}/>
 
         {/* Populares */}
         <Populars barbershop={barbershop} />

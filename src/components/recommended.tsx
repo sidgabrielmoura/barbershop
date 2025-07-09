@@ -7,16 +7,15 @@ import { Barbershop } from "@/generated/prisma";
 
 interface RecommendedProps {
     barbershop: Barbershop[];
+    grid: boolean
 }
 
-export default function Recommended({ barbershop }: RecommendedProps) {
+export default function Recommended({ barbershop, grid }: RecommendedProps) {
     return (
         <div className="w-full flex flex-col justify-between mt-4 gap-5">
-            <h1 className="uppercase text-sm font-bold text-zinc-500">Recomendados</h1>
-
-            <div className="flex gap-2 overflow-x-auto">
+            <div className={grid ? "grid gap-2 grid-cols-2" : "flex gap-2 overflow-x-auto"}>
                 {barbershop.map((barber, index) => (
-                    <div key={index} className="w-full min-w-[200px] flex flex-col gap-3 p-2 relative rounded-2xl bg-zinc-950/60 justify-between items-center mb-2">
+                    <div key={index} className={`w-full flex flex-col gap-3 p-2 relative rounded-2xl bg-zinc-950/60 justify-between items-center mb-2 ${!grid && 'min-w-[200px]'}`}>
                         <Badge className="gap-1 bg-violet-900/80 rounded-full p-1 absolute top-3 left-3"><Star className="size-4 fill-violet-400 text-violet-400" /> 5,0</Badge>
                         <Image
                             alt={barber.name}

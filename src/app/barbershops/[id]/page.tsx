@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/prisma";
-import { Check, ChevronLeft, Menu, Smartphone, Star } from "lucide-react";
+import { Check, ChevronLeft, Menu, Smartphone, Star, StarIcon } from "lucide-react";
 import { IoLocationSharp } from "react-icons/io5";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import ServiceItem from "@/components/serviceItem";
 import Footer from "@/components/footer";
 import SheetTriggerComponent from "@/components/sheetTrigger";
 import PhoneComponent from "@/components/phoneItem";
+import StarsComponent from "@/components/barbershop/stars";
 
 export default async function BarbershopPage({ params }: any) {
     const barbershop = await db.barbershop.findUnique({
@@ -53,6 +54,8 @@ export default async function BarbershopPage({ params }: any) {
                             <span className="text-md text-zinc-300">5,0 (459 avaliações)</span>
                         </div>
                     </div>
+
+                    <StarsComponent/>
                 </section>
 
                 <div className="w-full h-[0.08px] bg-zinc-600/40 mt-6" />
