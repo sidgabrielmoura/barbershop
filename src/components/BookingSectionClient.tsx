@@ -6,7 +6,7 @@ import CalendarServiceComponent from "./CaledarService"
 import BookingHoursComponent from "./BookingHours"
 import Image from "next/image"
 import CreateBooking from "@/app/actions/create-booking"
-import { set } from "date-fns"
+import { isPast, set } from "date-fns"
 import { Button } from "./ui/button"
 import { toast } from "sonner"
 import { SheetClose } from "./ui/sheet"
@@ -67,6 +67,8 @@ export default function BookingSectionClient({ service, barbershop }: BookingCli
       const hourNum = Number(hourStr);
       const minuteNum = Number(minuteStr);
 
+      const timeIsOnThePast = isPast(set(new Date, {hours: hourNum, minutes: minuteNum}))
+
       const isBooked = bookings.some(
         (booking) =>
           booking.date.getHours() === hourNum &&
@@ -75,7 +77,8 @@ export default function BookingSectionClient({ service, barbershop }: BookingCli
 
       return {
         ...h,
-        disponible: !isBooked,
+        disponible: !isBooked && !timeIsOnThePast,
+        hoursInPast: timeIsOnThePast
       };
     });
 

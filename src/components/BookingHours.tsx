@@ -1,14 +1,15 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "./ui/button"
+import { isPast, set } from "date-fns"
 
 interface Props {
-    onHourSelect: (hour: string) => void
-    disponibleHours: {hour: string, disponible: boolean}[]
+  onHourSelect: (hour: string) => void
+  disponibleHours: { hour: string; disponible: boolean; hoursInPast: boolean }[]
 }
 
 export default function BookingHoursComponent({ onHourSelect, disponibleHours }: Props) {
-    const [checked, isChecked] = useState('')
+    const [checked, isChecked] = useState('')      
     
     return (
         <>
@@ -17,7 +18,7 @@ export default function BookingHoursComponent({ onHourSelect, disponibleHours }:
                     <div key={index}>
                         <Button
                             size="lg"
-                            disabled={!hour.disponible}
+                            disabled={!hour.disponible || hour.hoursInPast}
                             variant={hour.hour === checked ? 'default' : 'outline'}
                             className="rounded-full"
                             onClick={() => {
