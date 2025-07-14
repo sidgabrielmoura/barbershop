@@ -1,15 +1,12 @@
 'use client'
-import { CalendarDays, Database, Home, LogIn, LogOut, Menu, X } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
+import { CalendarDays, Home, LogIn, LogOut, Menu, X } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTrigger } from "./ui/sheet";
 import { QuickSearchServices } from "@/constants";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import { FaGoogle } from "react-icons/fa6";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { useState } from "react";
 import GoogleDialog from "./GoogleDialog";

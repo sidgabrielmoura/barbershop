@@ -5,7 +5,7 @@ import Appointments from "./appointments";
 import { Barbershop, Prisma } from "@/generated/prisma";
 import { useEffect, useState } from "react";
 import getAppointments from "@/app/actions/getAppointments";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Recommended from "./recommended";
 import { Card, CardContent } from "./ui/card";
@@ -16,8 +16,7 @@ interface BarbershopInterface {
 export default function AppointmentsClient({ barbershop }: BarbershopInterface) {
     const path = usePathname()
     const { data } = useSession();
-    const [userAppointments, setUserAppointments] = useState<Prisma.BookingGetPayload<{ include: { service: { include: { barbershop: true } } } }>[]>([]);
-    const router = useRouter();
+    const [userAppointments, setUserAppointments] = useState<Prisma.BookingGetPayload<{ include: { service: { include: { barbershop: true } } } }>[]>([])
 
     useEffect(() => {
         const load = async () => {

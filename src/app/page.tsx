@@ -6,6 +6,7 @@ import Recommended from "@/components/recommended";
 import Populars from "@/components/populars";
 import WellcomeComponent from "@/components/wellcome";
 import AppointmentsClient from "@/components/appointments-client";
+import { Suspense } from "react";
 
 export default async function Home() {
 
@@ -13,23 +14,29 @@ export default async function Home() {
 
   return (
     <main className="p-1 flex flex-col gap-2">
-      <Navbar />
+      <Suspense fallback={<div>Carregando...</div>}>
+        <Navbar />
+      </Suspense>
       <section className="px-4">
         <WellcomeComponent />
 
         {/* Barra de pesquisa e Pesquisa rápida */}
-        <SearchComponent />
+        <Suspense fallback={<div>Carregando...</div>}>
+          <SearchComponent />
+        </Suspense>
 
         <div className="w-full flex justify-center items-center mt-4">
           <Image alt="" src={'/Banner.svg'} width={200} height={20} className="w-full max-w-lg" />
         </div>
 
         {/* Agendamentos */}
-        <AppointmentsClient barbershop={barbershop}/>
+        <Suspense fallback={<div>Carregando...</div>}>
+          <AppointmentsClient barbershop={barbershop} />
+        </Suspense>
 
         {/* Recomendados */}
         <h1 className="uppercase text-sm font-bold text-zinc-500 mt-4">Recomendados</h1>
-        <Recommended barbershop={barbershop} grid={false}/>
+        <Recommended barbershop={barbershop} grid={false} />
 
         {/* Populares */}
         <Populars barbershop={barbershop} />
