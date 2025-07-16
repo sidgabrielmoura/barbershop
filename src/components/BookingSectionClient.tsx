@@ -16,7 +16,7 @@ import { useSession } from "next-auth/react"
 import { BookingsGetter } from "@/app/actions/getBookings"
 import { Barbershop, Booking } from "@/generated/prisma"
 
-interface BookingClientInterface{
+interface BookingClientInterface {
   service: any,
   barbershop: Barbershop
 }
@@ -62,12 +62,26 @@ export default function BookingSectionClient({ service, barbershop }: BookingCli
   }
 
   const getTimeList = (bookings: Booking[]) => {
+    const now = new Date();
+
     const timelist = hours.map((h) => {
       const [hourStr, minuteStr] = h.hour.split(':');
       const hourNum = Number(hourStr);
       const minuteNum = Number(minuteStr);
 
-      const timeIsOnThePast = isPast(set(new Date, {hours: hourNum, minutes: minuteNum}))
+      // Cria uma data para o horário selecionado no dia escolhido
+      const selectedDateObj = selectedDate
+        ? new Date(selectedDate)
+        : now;
+
+      // Ajusta a hora e minuto
+      const timeToCheck = set(selectedDateObj, { hours: hourNum, minutes: minuteNum, seconds: 0, milliseconds: 0 });
+
+      // Só considera passado se for o mesmo dia e horário menor que agora
+      const timeIsOnThePast =
+        !!selectedDate &&
+        timeToCheck < now &&
+        selectedDateObj.toDateString() === now.toDateString();
 
       const isBooked = bookings.some(
         (booking) =>
