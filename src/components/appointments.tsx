@@ -126,7 +126,7 @@ export default function Appointments({ booking }: BookingInterface) {
 
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
-                                            <Button variant={'secondary'} className="w-full bg-red-500">Cancelar reserva</Button>
+                                            {confirmed && <Button variant={'secondary'} className="w-full bg-red-500">Cancelar reserva</Button>}
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
@@ -137,7 +137,7 @@ export default function Appointments({ booking }: BookingInterface) {
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
                                                 <AlertDialogCancel>voltar</AlertDialogCancel>
-                                                {confirmed && <AlertDialogAction onClick={handleDeleteBooking} className="bg-red-500/80">Confirmar</AlertDialogAction>}
+                                                <AlertDialogAction onClick={handleDeleteBooking} className="bg-red-500/80">Confirmar</AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
